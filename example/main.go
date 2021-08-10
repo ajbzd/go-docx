@@ -8,6 +8,9 @@ func main() {
 	f := docx.NewFile()
 	// add new table
 	t := f.AddTable()
+	t.Properties.Borders.InsideH.Val = docx.TABLE_BORDER_VAL_DASHED
+	t.Properties.Borders.InsideV.Color = "ff0000"
+	t.Properties.Borders.InsideV.Size = 15
 
 	for i := 0; i < 3; i++ {
 		row := t.AddRow()

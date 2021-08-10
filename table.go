@@ -2,18 +2,102 @@ package docx
 
 import "encoding/xml"
 
+const (
+	BLACK                                   = "000000"
+	TABLE_BORDER_VAL_SINGLE                 = "single"                 // a single line
+	TABLE_BORDER_VAL_DASHDOTSTROKED         = "dashDotStroked"         // a line with a series of alternating thin and thick strokes
+	TABLE_BORDER_VAL_DASHED                 = "dashed"                 // a dashed line
+	TABLE_BORDER_VAL_DASHSMALLGAP           = "dashSmallGap"           // a dashed line with small gaps
+	TABLE_BORDER_VAL_DOTDASH                = "dotDash"                // a line with alternating dots and dashes
+	TABLE_BORDER_VAL_DOTDOTDASH             = "dotDotDash"             // a line with a repeating dot - dot - dash sequence
+	TABLE_BORDER_VAL_DOTTED                 = "dotted"                 // a dotted line
+	TABLE_BORDER_VAL_DOUBLE                 = "double"                 // a double line
+	TABLE_BORDER_VAL_DOUBLEWAVE             = "doubleWave"             // a double wavy line
+	TABLE_BORDER_VAL_INSET                  = "inset"                  // an inset set of lines
+	TABLE_BORDER_VAL_NIL                    = "nil"                    // no border
+	TABLE_BORDER_VAL_NONE                   = "none"                   // no border
+	TABLE_BORDER_VAL_OUTSET                 = "outset"                 // an outset set of lines
+	TABLE_BORDER_VAL_THICK                  = "thick"                  // a single line
+	TABLE_BORDER_VAL_THICKTHINLARGEGAP      = "thickThinLargeGap"      // a thick line contained within a thin line with a large-sized intermediate gap
+	TABLE_BORDER_VAL_THICKTHINMEDIUMGAP     = "thickThinMediumGap"     // a thick line contained within a thin line with a medium-sized intermediate gap
+	TABLE_BORDER_VAL_THICKTHINSMALLGAP      = "thickThinSmallGap"      // a thick line contained within a thin line with a small-sized intermediate gap
+	TABLE_BORDER_VAL_THINTHICKLARGEGAP      = "thinThickLargeGap"      // a thin line contained within a thick line with a large-sized intermediate gap
+	TABLE_BORDER_VAL_THINTHICKMEDIUMGAP     = "thinThickMediumGap"     // a thin line contained within a thick line with a medium-sized intermediate gap
+	TABLE_BORDER_VAL_THINTHICKSMALLGAP      = "thinThickSmallGap"      // a thin line contained within a thick line with a small-sized intermediate gap
+	TABLE_BORDER_VAL_THINTHICKTHINLARGEGAP  = "thinThickThinLargeGap"  // a thin-thick-thin line with a large gap
+	TABLE_BORDER_VAL_THINTHICKTHINMEDIUMGAP = "thinThickThinMediumGap" // a thin-thick-thin line with a medium gap
+	TABLE_BORDER_VAL_THINTHICKTHINSMALLGAP  = "thinThickThinSmallGap"  // a thin-thick-thin line with a small gap
+	TABLE_BORDER_VAL_THREEDEEMBOSS          = "threeDEmboss"           // a three-staged gradient line, getting darker towards the paragraph
+	TABLE_BORDER_VAL_THREEDEENGRAVE         = "threeDEngrave"          // a three-staged gradient like, getting darker away from the paragraph
+	TABLE_BORDER_VAL_TRIPLE                 = "triple"                 // a triple line
+	TABLE_BORDER_VAL_WAVE                   = "wave"                   // a wavy line
+)
+
 type Table struct {
 	XMLName    xml.Name `xml:"w:tbl"`
 	Data       []interface{}
 	grid       *TableGrid
-	properties *TableProperties
-	file       *File
+	Properties *TableProperties
 }
 
 type TableProperties struct {
 	XMLName xml.Name `xml:"w:tblPr"`
-	Data    []interface{}
-	width   *TableWidth
+	Width   *TableWidth
+	Borders *TableBorders
+}
+
+type TableBorders struct {
+	XMLName xml.Name `xml:"w:tblBorders"`
+	Top     *TableBordersTop
+	Bottom  *TableBordersBottom
+	Start   *TableBordersStart
+	End     *TableBordersEnd
+	InsideV *TableBordersInsideV
+	InsideH *TableBordersInsideH
+}
+
+// TableBordersTop specifies the border displayed at the top of a table.
+type TableBordersTop struct {
+	XMLName xml.Name `xml:"w:top"`
+	TableBordersAttributes
+}
+
+// TableBordersBottom specifies the border displayed at the bottom of a table.
+type TableBordersBottom struct {
+	XMLName xml.Name `xml:"w:bottom"`
+	TableBordersAttributes
+}
+
+// TableBordersStart specifies the border displayed to the left for left-to-right tables and right for right-to-left tables.
+type TableBordersStart struct {
+	XMLName xml.Name `xml:"w:start"`
+	TableBordersAttributes
+}
+
+// TableBordersEnd specifies the border displayed on the right for left-to-right tables and left for right-to-left tables
+type TableBordersEnd struct {
+	XMLName xml.Name `xml:"w:end"`
+	TableBordersAttributes
+}
+
+// TableBordersInsideH specifies the border displayed on all inside horizontal table cell borders.
+type TableBordersInsideH struct {
+	XMLName xml.Name `xml:"w:insideH"`
+	TableBordersAttributes
+}
+
+// TableBordersInsideV specifies the border displayed on all inside vertical table cell borders.
+type TableBordersInsideV struct {
+	XMLName xml.Name `xml:"w:insideV"`
+	TableBordersAttributes
+}
+
+type TableBordersAttributes struct {
+	Color  string `xml:"w:color,attr"`
+	Shadow string `xml:"w:shadow,attr"`
+	Space  int    `xml:"w:space,attr"`
+	Size   int    `xml:"w:sz,attr"`
+	Val    string `xml:"w:val,attr"`
 }
 
 type TableWidth struct {
@@ -69,16 +153,24 @@ func (f *File) AddTable() *Table {
 		Data: make([]interface{}, 0),
 	}
 	tblW := &TableWidth{}
-	props := &TableProperties{
-		Data:  make([]interface{}, 0),
-		width: tblW,
+	// default attributes of table: single black borders
+	attrs := TableBordersAttributes{Color: BLACK, Val: TABLE_BORDER_VAL_SINGLE}
+	tblBorders := &TableBorders{
+		Top:     &TableBordersTop{TableBordersAttributes: attrs},
+		Bottom:  &TableBordersBottom{TableBordersAttributes: attrs},
+		End:     &TableBordersEnd{TableBordersAttributes: attrs},
+		Start:   &TableBordersStart{TableBordersAttributes: attrs},
+		InsideV: &TableBordersInsideV{TableBordersAttributes: attrs},
+		InsideH: &TableBordersInsideH{TableBordersAttributes: attrs},
 	}
-	props.Data = append(props.Data, tblW)
+	props := &TableProperties{
+		Width:   tblW,
+		Borders: tblBorders,
+	}
 	t := &Table{
 		Data:       make([]interface{}, 0),
 		grid:       grid,
-		properties: props,
-		file:       f,
+		Properties: props,
 	}
 	t.Data = append(t.Data, props)
 	t.Data = append(t.Data, grid)
@@ -117,7 +209,7 @@ func (r *Row) AddCell(width int) *Cell {
 	// Do not add more width than we have columns
 	if len(r.Data) > len(r.table.grid.Data) {
 		r.table.grid.Data = append(r.table.grid.Data, gridCol)
-		r.table.properties.width.Width += width
+		r.table.Properties.Width.Width += width
 	}
 
 	return c

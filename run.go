@@ -32,6 +32,14 @@ func (r *Run) Size(size int) *Run {
 	return r
 }
 
+// Bold set run bold
+func (r *Run) Bold(bold bool) *Run {
+	r.RunProperties.Bold = &Bold{
+		Val: bold,
+	}
+	return r
+}
+
 type Hyperlink struct {
 	XMLName xml.Name `xml:"w:hyperlink"`
 	ID      string   `xml:"r:id,attr"`

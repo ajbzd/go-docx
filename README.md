@@ -9,11 +9,11 @@ docx is a simple library to creating DOCX file in Go.
 ### Install
 Go modules supported
 ```sh
-go get github.com/srdolor/docx
+go get github.com/ChotiwatMajor/go-docx
 ```
 Import:
 ```sh
-import "github.com/srdolor/docx"
+import "github.com/ChotiwatMajor/go-docx"
 ```
 
 ### Usage
@@ -22,7 +22,7 @@ import "github.com/srdolor/docx"
 package main
 
 import (
-	"github.com/srdolor/docx"
+	"github.com/ChotiwatMajor/go-docx"
 )
 
 func main() {

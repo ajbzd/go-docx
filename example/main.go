@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/srdolor/docx"
+	"github.com/ChotiwatMajor/go-docx"
 )
 
 func main() {
@@ -52,7 +52,7 @@ func main() {
 	para.AddText("Paragraph with indentation and distrubution").Size(12)
 	para.AddNewLine()
 	para = f.AddParagraph()
-	para.AddText("test font size").Size(22)
+	para.AddText("test font size bold").Size(22).Bold(true)
 	para.AddNewLine()
 	para.AddText("test color").Color("808080")
 	para.AddNewLine()

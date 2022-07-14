@@ -111,7 +111,7 @@ const (
 			</a:clrScheme>
 			<a:fontScheme name="Office">
 				<a:majorFont>
-					<a:latin typeface="Cambria"/>
+					<a:latin typeface="TH SarabunPSK"/>
 					<a:ea typeface=""/>
 					<a:cs typeface=""/>
 					<a:font script="Jpan" typeface="ＭＳ Ｐゴシック"/>
@@ -146,7 +146,7 @@ const (
 					<a:font script="Geor" typeface="Sylfaen"/>
 				</a:majorFont>
 				<a:minorFont>
-					<a:latin typeface="Arial"/>
+					<a:latin typeface="TH SarabunPSK"/>
 					<a:ea typeface=""/>
 					<a:cs typeface=""/>
 					<a:font script="Jpan" typeface="ＭＳ Ｐゴシック"/>

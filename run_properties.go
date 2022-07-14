@@ -10,6 +10,7 @@ type RunProperties struct {
 	XMLName  xml.Name  `xml:"w:rPr"`
 	Color    *Color    `xml:"w:color,omitempty"`
 	Size     *Size     `xml:"w:sz,omitempty"`
+	Bold     *Bold     `xml:"w:b,omitempty"`
 	RunStyle *RunStyle `xml:"w:rStyle,omitempty"`
 }
 
@@ -26,4 +27,9 @@ type Color struct {
 type Size struct {
 	XMLName xml.Name `xml:"w:sz"`
 	Val     int      `xml:"w:val,attr"`
+}
+
+type Bold struct {
+	XMLName xml.Name `xml:"w:b"`
+	Val     bool     `xml:"w:val,attr"`
 }

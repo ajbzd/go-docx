@@ -133,6 +133,7 @@ type Cell struct {
 	XMLName    xml.Name `xml:"w:tc"`
 	Data       []interface{}
 	Properties *CellProperties
+	Paragraph  *Paragraph
 	row        *Row
 }
 
@@ -192,10 +193,17 @@ func (t *Table) AddRow() *Row {
 // AddCell is adding cell to row, takes width in twips
 func (r *Row) AddCell(width int) *Cell {
 	tcProps := &CellProperties{}
+	props := &ParagraphProperties{}
+	p := &Paragraph{
+		Data:       make([]interface{}, 0),
+		Properties: props,
+	}
 	c := &Cell{
 		row:        r,
 		Properties: tcProps,
+		Paragraph:  p,
 	}
+	p.Data = append(p.Data, props)
 	r.Data = append(r.Data, c)
 	gridCol := &tableGridCol{
 		Width: width,

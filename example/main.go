@@ -15,8 +15,9 @@ func main() {
 	for i := 0; i < 3; i++ {
 		row := t.AddRow()
 		for i := 0; i < 3; i++ {
-			c := row.AddCell(2 * docx.CM)
-			c.AddText("Hello").Size(20).Color("4900db")
+			c := row.AddCell(3 * docx.CM)
+			c.Paragraph.Properties.Justification(docx.JUSTIFY_CENTER)
+			c.Paragraph.AddText("center").Size(14)
 		}
 	}
 	row := t.AddRow()

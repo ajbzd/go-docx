@@ -31,6 +31,8 @@ const (
 	TABLE_BORDER_VAL_THREEDEENGRAVE         = "threeDEngrave"          // a three-staged gradient like, getting darker away from the paragraph
 	TABLE_BORDER_VAL_TRIPLE                 = "triple"                 // a triple line
 	TABLE_BORDER_VAL_WAVE                   = "wave"                   // a wavy line
+	TABLE_LAYOUT_TYPE_FIXED                 = "fixed"                  // fixed cell width
+	TABLE_LAYOUT_TYPE_AUTO                  = "auto"                   // auto cell width
 )
 
 type Table struct {
@@ -44,6 +46,7 @@ type TableProperties struct {
 	XMLName xml.Name `xml:"w:tblPr"`
 	Width   *TableWidth
 	Borders *TableBorders
+	Layout  *TableLayout
 }
 
 type TableBorders struct {
@@ -54,6 +57,11 @@ type TableBorders struct {
 	End     *TableBordersEnd
 	InsideV *TableBordersInsideV
 	InsideH *TableBordersInsideH
+}
+
+type TableLayout struct {
+	XMLName xml.Name `xml:"w:tblLayout"`
+	Type    string   `xml:"w:type,attr"`
 }
 
 // TableBordersTop specifies the border displayed at the top of a table.
@@ -164,9 +172,11 @@ func (f *File) AddTable() *Table {
 		InsideV: &TableBordersInsideV{TableBordersAttributes: attrs},
 		InsideH: &TableBordersInsideH{TableBordersAttributes: attrs},
 	}
+	tblLayout := &TableLayout{}
 	props := &TableProperties{
 		Width:   tblW,
 		Borders: tblBorders,
+		Layout:  tblLayout,
 	}
 	t := &Table{
 		Data:       make([]interface{}, 0),

@@ -8,6 +8,7 @@ func main() {
 	f := docx.NewFile()
 	// add new table
 	t := f.AddTable()
+	t.Properties.Layout.Type = docx.TABLE_LAYOUT_TYPE_FIXED
 	t.Properties.Borders.InsideH.Val = docx.TABLE_BORDER_VAL_DASHED
 	t.Properties.Borders.InsideV.Color = "ff0000"
 	t.Properties.Borders.InsideV.Size = 15
@@ -15,9 +16,9 @@ func main() {
 	for i := 0; i < 3; i++ {
 		row := t.AddRow()
 		for i := 0; i < 3; i++ {
-			c := row.AddCell(3 * docx.CM)
+			c := row.AddCell(2 * docx.CM)
 			c.Paragraph.Properties.Justification(docx.JUSTIFY_CENTER)
-			c.Paragraph.AddText("center").Size(14)
+			c.Paragraph.AddText("centercentercentercentercentercentercentercentercentercentercentercentercentercentercentercentercentercenter").Size(14)
 		}
 	}
 	row := t.AddRow()

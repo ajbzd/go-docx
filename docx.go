@@ -18,3 +18,19 @@ type Body struct {
 	XMLName xml.Name `xml:"w:body"`
 	Content []interface{}
 }
+
+type SectionProperties struct {
+	XMLName    xml.Name `xml:"w:sectPr"`
+	PageMargin *PageMargin
+}
+
+type PageMargin struct {
+	XMLName xml.Name `xml:"w:pgMar"`
+	Header  int      `xml:"w:header,attr"`
+	Bottom  int      `xml:"w:bottom,attr"`
+	Top     int      `xml:"w:top,attr"`
+	Right   int      `xml:"w:right,attr"`
+	Left    int      `xml:"w:left,attr"`
+	Footer  int      `xml:"w:footer,attr"`
+	Gutter  int      `xml:"w:gutter,attr"`
+}

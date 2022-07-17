@@ -1,24 +1,45 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/ChotiwatMajor/go-docx"
 )
 
 func main() {
 	f := docx.NewFile()
+	sp := docx.SectionProperties{
+		PageMargin: &docx.PageMargin{
+			Top:    docx.INCH,
+			Bottom: docx.INCH,
+			Left:   docx.INCH * 0.5,
+			Right:  docx.INCH * 0.5,
+		},
+	}
+	f.Document.Body.Content = append(f.Document.Body.Content, &sp)
 	// add new table
 	t := f.AddTable()
 	t.Properties.Layout.Type = docx.TABLE_LAYOUT_TYPE_FIXED
 	t.Properties.Borders.InsideH.Val = docx.TABLE_BORDER_VAL_DASHED
 	t.Properties.Borders.InsideV.Color = "ff0000"
 	t.Properties.Borders.InsideV.Size = 15
+	t.Properties.CellMargin.Start.TableCellMarginAttributes.Width = 100
+	t.Properties.CellMargin.End.TableCellMarginAttributes.Width = 100
+	t.Properties.CellMargin.Top.TableCellMarginAttributes.Width = 100
+	t.Properties.CellMargin.Bottom.TableCellMarginAttributes.Width = 100
 
 	for i := 0; i < 3; i++ {
 		row := t.AddRow()
 		for i := 0; i < 3; i++ {
 			c := row.AddCell(2 * docx.CM)
-			c.Paragraph.Properties.Justification(docx.JUSTIFY_CENTER)
-			c.Paragraph.AddText("centercentercentercentercentercentercentercentercentercentercentercentercentercentercentercentercentercenter").Size(14)
+			c.Properties.VerticalAlignment(docx.CELL_VERTICAL_ALIGN_CENTER)
+			if i == 0 {
+				c.Paragraph.Properties.Justification(docx.JUSTIFY_CENTER)
+				c.Paragraph.AddText(fmt.Sprint(i)).Size(14)
+			} else {
+				c.Paragraph.AddText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer").Size(14)
+			}
+
 		}
 	}
 	row := t.AddRow()

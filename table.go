@@ -33,6 +33,10 @@ const (
 	TABLE_BORDER_VAL_WAVE                   = "wave"                   // a wavy line
 	TABLE_LAYOUT_TYPE_FIXED                 = "fixed"                  // fixed cell width
 	TABLE_LAYOUT_TYPE_AUTO                  = "auto"                   // auto cell width
+
+	CELL_VERTICAL_ALIGN_TOP    = "top"    // align content to the top of cell vertically
+	CELL_VERTICAL_ALIGN_BOTTOM = "bottom" // align content to the bottom of cell vertically
+	CELL_VERTICAL_ALIGN_CENTER = "center" // align content to the center of cell vertically
 )
 
 type Table struct {
@@ -43,10 +47,11 @@ type Table struct {
 }
 
 type TableProperties struct {
-	XMLName xml.Name `xml:"w:tblPr"`
-	Width   *TableWidth
-	Borders *TableBorders
-	Layout  *TableLayout
+	XMLName    xml.Name `xml:"w:tblPr"`
+	Width      *TableWidth
+	Borders    *TableBorders
+	Layout     *TableLayout
+	CellMargin *TableCellMargin
 }
 
 type TableBorders struct {
@@ -62,6 +67,14 @@ type TableBorders struct {
 type TableLayout struct {
 	XMLName xml.Name `xml:"w:tblLayout"`
 	Type    string   `xml:"w:type,attr"`
+}
+
+type TableCellMargin struct {
+	XMLName xml.Name `xml:"w:tblCellMar"`
+	Top     *TableCellMarginTop
+	Bottom  *TableCellMarginBottom
+	Start   *TableCellMarginStart
+	End     *TableCellMarginEnd
 }
 
 // TableBordersTop specifies the border displayed at the top of a table.
@@ -100,12 +113,37 @@ type TableBordersInsideV struct {
 	TableBordersAttributes
 }
 
+type TableCellMarginTop struct {
+	XMLName xml.Name `xml:"w:top"`
+	TableCellMarginAttributes
+}
+
+type TableCellMarginBottom struct {
+	XMLName xml.Name `xml:"w:bottom"`
+	TableCellMarginAttributes
+}
+
+type TableCellMarginStart struct {
+	XMLName xml.Name `xml:"w:start"`
+	TableCellMarginAttributes
+}
+
+type TableCellMarginEnd struct {
+	XMLName xml.Name `xml:"w:end"`
+	TableCellMarginAttributes
+}
+
 type TableBordersAttributes struct {
 	Color  string `xml:"w:color,attr"`
 	Shadow string `xml:"w:shadow,attr"`
 	Space  int    `xml:"w:space,attr"`
 	Size   int    `xml:"w:sz,attr"`
 	Val    string `xml:"w:val,attr"`
+}
+
+type TableCellMarginAttributes struct {
+	Width int    `xml:"w:w,attr"`
+	Type  string `xml:"w:type,attr"`
 }
 
 type TableWidth struct {
@@ -150,6 +188,11 @@ type CellProperties struct {
 	Data    []interface{}
 }
 
+type CellVerticalAlignment struct {
+	XMLName xml.Name `xml:"w:vAlign"`
+	Val     string   `xml:"w:val,attr"`
+}
+
 type cellWidth struct {
 	XMLName xml.Name `xml:"w:tcW"`
 	Width   int      `xml:"w:w,attr"`
@@ -173,10 +216,18 @@ func (f *File) AddTable() *Table {
 		InsideH: &TableBordersInsideH{TableBordersAttributes: attrs},
 	}
 	tblLayout := &TableLayout{}
+	mAttrs := TableCellMarginAttributes{Type: "dxa"}
+	tblCellMargin := &TableCellMargin{
+		Top:    &TableCellMarginTop{TableCellMarginAttributes: mAttrs},
+		Bottom: &TableCellMarginBottom{TableCellMarginAttributes: mAttrs},
+		End:    &TableCellMarginEnd{TableCellMarginAttributes: mAttrs},
+		Start:  &TableCellMarginStart{TableCellMarginAttributes: mAttrs},
+	}
 	props := &TableProperties{
-		Width:   tblW,
-		Borders: tblBorders,
-		Layout:  tblLayout,
+		Width:      tblW,
+		Borders:    tblBorders,
+		Layout:     tblLayout,
+		CellMargin: tblCellMargin,
 	}
 	t := &Table{
 		Data:       make([]interface{}, 0),
@@ -250,4 +301,11 @@ func (c *Cell) AddText(text string) *Run {
 	c.Data = append(c.Data, p)
 
 	return run
+}
+
+// CELL_VERTICAL_ALIGN_TOP align content to the top of cell vertically
+// CELL_VERTICAL_ALIGN_CENTER align content to the bottom of cell vertically
+// CELL_VERTICAL_ALIGN_BOTTM align content to the center of cell vertically
+func (cp *CellProperties) VerticalAlignment(align string) {
+	cp.Data = append(cp.Data, &CellVerticalAlignment{Val: align})
 }

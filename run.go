@@ -40,6 +40,15 @@ func (r *Run) Bold(bold bool) *Run {
 	return r
 }
 
+func (r *Run) Font(font string) *Run {
+	r.RunProperties.Font = &Font{
+		Ascii: font,
+		HAnsi: font,
+		Cs:    font,
+	}
+	return r
+}
+
 type Hyperlink struct {
 	XMLName xml.Name `xml:"w:hyperlink"`
 	ID      string   `xml:"r:id,attr"`

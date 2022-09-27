@@ -35,6 +35,12 @@ type Indentation struct {
 	Right   int      `xml:"w:right,attr"`
 }
 
+type Spacing struct {
+	XMLName xml.Name `xml:"w:spacing"`
+	Before  int      `xml:"w:before,attr"`
+	After   int      `xml:"w:after,attr"`
+}
+
 type LineBreak struct {
 	XMLName xml.Name `xml:"w:br"`
 	Type    string   `xml:"w:type,attr"`
@@ -116,4 +122,9 @@ func (prp *ParagraphProperties) Justification(justificaiton string) {
 // There is constant INCH which is equal to 1440 twips per inch
 func (prp *ParagraphProperties) Indentation(left, right int) {
 	prp.Data = append(prp.Data, &Indentation{Left: left, Right: right})
+}
+
+// Spacing sets the space before and after paragraph
+func (prp *ParagraphProperties) Spacing(before, after int) {
+	prp.Data = append(prp.Data, &Spacing{Before: before, After: after})
 }

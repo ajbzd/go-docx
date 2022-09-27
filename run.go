@@ -40,6 +40,7 @@ func (r *Run) Bold(bold bool) *Run {
 	return r
 }
 
+// Font set run font
 func (r *Run) Font(font string) *Run {
 	r.RunProperties.Font = &Font{
 		Ascii: font,

@@ -83,6 +83,8 @@ func main() {
 	nextPara := f.AddParagraph()
 	nextPara.AddNewPage()
 	nextPara.AddLink("google", `http://google.com`)
+	nextPara.Properties.PageBreakBefore("false")
+	nextPara.Properties.KeepLines()
 
 	f.Save("./test.docx")
 }

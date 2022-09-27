@@ -48,7 +48,11 @@ type LineBreak struct {
 
 type KeepLines struct {
 	XMLName xml.Name `xml:"w:keepLines"`
-	Type    string   `xml:"w:type"`
+}
+
+type PageBreakBefore struct {
+	XMLName xml.Name `xml:"w:pageBreakBefore"`
+	Val     string   `xml:"w:val,attr"`
 }
 
 // AddParagraph add new paragraph
@@ -137,4 +141,9 @@ func (prp *ParagraphProperties) Spacing(before, after int) {
 // KeepLines prevents pagebreak within a paragraph
 func (prp *ParagraphProperties) KeepLines() {
 	prp.Data = append(prp.Data, &KeepLines{})
+}
+
+// Define Pagebreak before paragraph
+func (prp *ParagraphProperties) PageBreakBefore(val string) {
+	prp.Data = append(prp.Data, &PageBreakBefore{Val: val})
 }

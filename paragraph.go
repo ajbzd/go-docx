@@ -46,6 +46,11 @@ type LineBreak struct {
 	Type    string   `xml:"w:type,attr"`
 }
 
+type KeepLines struct {
+	XMLName xml.Name `xml:"w:keepLines"`
+	Type    string   `xml:"w:type"`
+}
+
 // AddParagraph add new paragraph
 func (f *File) AddParagraph() *Paragraph {
 	props := &ParagraphProperties{}
@@ -127,4 +132,9 @@ func (prp *ParagraphProperties) Indentation(left, right int) {
 // Spacing sets the space before and after paragraph
 func (prp *ParagraphProperties) Spacing(before, after int) {
 	prp.Data = append(prp.Data, &Spacing{Before: before, After: after})
+}
+
+// KeepLines prevents pagebreak within a paragraph
+func (prp *ParagraphProperties) KeepLines() {
+	prp.Data = append(prp.Data, &KeepLines{})
 }

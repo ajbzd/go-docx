@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/ChotiwatMajor/go-docx"
+	"github.com/ajbzd/go-docx"
 )
 
 func main() {
